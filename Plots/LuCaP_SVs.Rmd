@@ -1,0 +1,442 @@
+---
+title: "Characterizing cancer genome structural variants from short-read and long-read sequencing"
+author: "Katherine Feldmann"
+date: "Winter 2023"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+
+library(ggplot2)
+library(dplyr)
+library(stringr)
+library(VariantAnnotation)
+library(gGnome)
+library(reshape)
+library(gridExtra)
+library(mltools)
+library(ggrepel)
+```
+
+<font color="red">Background:</font>\
+Paired-end, short-read sequencing is the most commonly used sequencing technology for identifying structural variants (SV) largely due to low cost and high nucleotide accuracy. However, with reads around 150 bp in length, paired-end, short-read sequencing technologies are unable to identify many structural variants such as large insertions. Although more expensive and lower nucleotide accuracy, long-read technologies produce reads greater than 10 kb in length, resulting in reads that are long enough to span and identify more structural variants.\
+
+<font color="red">Question:</font>\
+Are long-reads able to identify more structural variants than short-reads?\
+Are long-reads able to identify unknown genomic rearrangements important for understanding prostate cancer?\
+
+<font color="red">Project:</font>\
+To identify structural variants in both short-read (Illumina) and long-read (Oxford Nanopore) whole-genome sequences from two PDX models (105CR and 145.2), long-read structural variants from multiple long-read structural variant callers (Sniffles, SVIM and SVDSS) were compared to structural variants identified by SvABA (short-read structural variant caller). Variant callers generate a standardized output file (i.e., VCF) that contains information on how the sample sequence varies from the reference genome sequence. Below are the different VCF files generated for each tool run, and bold VCF files were used for analyses.\
+
+### Structural Variant Detection Tools
+
+### *Paired-end, Short-read*
+
+<font color="blue">SvABA</font>\
+
+- *sample*.germline.indel.vcf\
+- ***sample*.germline.sv.vcf**\
+- *sample*.somatic.indel.vcf\
+- ***sample*.somatic.sv.vcf**\
+- *sample*.unfiltered.germline.indel.vcf\
+- *sample*.unfiltered.germline.sv.vcf\
+- *sample*.unfiltered.somatic.indel.vcf\
+- *sample*.unfiltered.somatic.sv.vcf\
+
+### *Long-read*
+
+<font color="blue">Sniffles</font>\
+
+- ***sample*_germline.vcf**: *Germline variants.*\
+- ***sample*_non_germline.vcf**: *Somatic/mosaic variants.*\
+
+<font color="blue">SVIM</font>\
+
+- variants.vcf: *All variants.*\
+- **variants.filtered10.vcf**: *Only variants with a quality score greater or equal to 10.*\
+
+<font color="blue">SVDSS</font>\
+
+- SVDSS.vcf\
+- **svs_poa.vcf**\
+
+### Save VCF Filenames
+
+### *Paired-end, Short-read*
+
+```{r sr_filenames}
+### Short-read ###
+{sr.somatic_105CR.1_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svaba/105CR.1_ILL_hg38_noMouse/105CR.1_ILL_hg38_noMouse.svaba.somatic.sv.vcf"
+sr.somatic_105CR.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svaba/105CR.2_ILL_hg38_noMouse/105CR.2_ILL_hg38_noMouse.svaba.somatic.sv.vcf"
+sr.somatic_145.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svaba/145.2_ILL_hg38_noMouse/145.2_ILL_hg38_noMouse.svaba.somatic.sv.vcf"}
+
+{sr.germ_105CR.1_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svaba/105CR.1_ILL_hg38_noMouse/105CR.1_ILL_hg38_noMouse.svaba.germline.sv.vcf"
+sr.germ_105CR.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svaba/105CR.2_ILL_hg38_noMouse/105CR.2_ILL_hg38_noMouse.svaba.germline.sv.vcf"
+sr.germ_145.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svaba/145.2_ILL_hg38_noMouse/145.2_ILL_hg38_noMouse.svaba.germline.sv.vcf"}
+```
+
+### *Long-read*
+
+```{r lr_filenames}
+### Sniffles ###
+{sniffles.nongerm_105CR_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/sniffles/105CR_ONT_hg38_Mouse/105CR_ONT_hg38_Mouse_non_germline.vcf"
+sniffles.nongerm_145.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/sniffles/145.2_ONT_hg38_Mouse/145.2_ONT_hg38_Mouse_non_germline.vcf"}
+
+{sniffles.germ_105CR_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/sniffles/105CR_ONT_hg38_Mouse/105CR_ONT_hg38_Mouse_germline.vcf"
+sniffles.germ_145.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/sniffles/145.2_ONT_hg38_Mouse/145.2_ONT_hg38_Mouse_germline.vcf"}
+
+### Long-read Merged ###
+{lr.nongerm_105CR_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/jasmine/105CR_ONT_hg38_Mouse_non_germline/105CR_ONT_hg38_Mouse_merged.vcf"
+lr.nongerm_145.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/jasmine/145.2_ONT_hg38_Mouse_non_germline/145.2_ONT_hg38_Mouse_merged.vcf"}
+
+{lr.germ_105CR_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/jasmine/105CR_ONT_hg38_Mouse_germline/105CR_ONT_hg38_Mouse_merged.vcf"
+lr.germ_145.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/jasmine/145.2_ONT_hg38_Mouse_germline/145.2_ONT_hg38_Mouse_merged.vcf"}
+```
+
+### Read VCF Files Using readVcf
+
+Read in the VCF files using the R package VariantAnnotation. VCF files follow a standardized format, and readVcf uses this format to save the information as an S4 data structure.
+
+```{r read_vcf}
+# List of file names.
+samples <- c('sr.somatic_105CR.1','sr.somatic_105CR.2','sr.somatic_145.2',
+             'sr.germ_105CR.1','sr.germ_105CR.2','sr.germ_145.2',
+             'sniffles.nongerm_105CR','sniffles.nongerm_145.2',
+             'sniffles.germ_105CR','sniffles.germ_145.2',
+             'lr.nongerm_105CR','lr.nongerm_145.2',
+             'lr.germ_105CR','lr.germ_145.2')
+
+# Read VCF files.
+for(i in samples){
+  assign(paste(i, 's4', sep = '_'), readVcf(get(paste(i, 'fn', sep = '_'))))
+}
+```
+
+### Extract Information from readVcf S4 Object
+
+Although VCF files follow a standardized format, the files generated from different detection tools deviate in how information in stored within that format. Extract the information from each S4 object and save in a data frame.
+
+```{r extract_information}
+# Restructure data prior to combining data frames.
+for(i in samples){
+  temp <- get(paste(i, 's4', sep = '_'))
+  tool <- str_split_fixed(i, '_', 2)[1]
+  pdx <- str_split_fixed(i, '_', 2)[2]
+  if(tool == 'sr.somatic' | tool == 'sr.germ'){
+    find_length <- 'temp@info$SPAN' # SPAN is the distance between start and end positions. If translocation, SPAN is -1.
+    find_sv_type <- 'ifelse(temp@info$SPAN == -1, "TRA", data.frame(temp@fixed$ALT)[,3])'
+    find_merged_tools <- 'rep("svaba", nrow(temp))'
+  } else if(tool == 'sniffles.nongerm' | tool == 'sniffles.germ'){
+    find_length <- 'temp@info$SVLEN' # SVLEN is the length of the structural variant. If translocation, SVLEN is 0.
+    find_sv_type <- 'temp@info$SVTYPE'
+    find_merged_tools <- 'rep("sniffles", nrow(temp))'
+  } else if(tool == 'lr.nongerm' | tool == 'lr.germ'){
+    find_length <- 'temp@info$SVLEN' # SVLEN is the length of the structural variant. If translocation, SVLEN is 0.
+    find_sv_type <- 'ifelse(temp@info$SVTYPE == "", 
+                    str_split_fixed(temp@rowRanges@ranges@NAMES, "[.]", 3)[,2], 
+                    temp@info$SVTYPE)'
+    find_merged_tools <- 'apply(as.matrix(temp@info$IDLIST),1,paste,collapse=",")'
+  }
+  assign(i, data.frame(Tool = rep(tool, nrow(temp)),
+                       Sample = rep(pdx, nrow(temp)),
+                       ID = temp@rowRanges@ranges@NAMES,
+                       Chromosome = temp@rowRanges@seqnames,
+                       SV_Type = eval(parse(text=find_sv_type)),
+                       Length = eval(parse(text=find_length)),
+                       Start = temp@rowRanges@ranges@start,
+                       Merged_Tools = eval(parse(text=find_merged_tools)),
+                       Quality = temp@fixed$QUAL,
+                       Filter = temp@fixed$FILTER))
+  temp <- get(i)
+  temp$Merged_Tools <- str_replace(temp$Merged_Tools, 'Sniffles[^,]*', 'sniffles')
+  temp$Merged_Tools <- str_replace(temp$Merged_Tools, 'svim[^,]*', 'svim')
+  temp$Merged_Tools <- str_replace(temp$Merged_Tools, '[A-Z][A-Z][A-Z]_chr[^,]*', 'svdss')
+  temp$Merged_Tools <- str_replace(temp$Merged_Tools, ',NA,NA', '')
+  temp$Merged_Tools <- str_replace(temp$Merged_Tools, ',NA', '')
+  assign(i, temp)
+}
+
+# Only include the first breakpoint to remove duplicates.
+{sr.germ_105CR.1 <- sr.germ_105CR.1[grep(':1', sr.germ_105CR.1$ID),]
+sr.germ_105CR.2 <- sr.germ_105CR.2[grep(':1', sr.germ_105CR.2$ID),]
+sr.germ_145.2 <- sr.germ_145.2[grep(':1', sr.germ_145.2$ID),]}
+
+{sr.somatic_105CR.1 <- sr.somatic_105CR.1[grep(':1', sr.somatic_105CR.1$ID),]
+sr.somatic_105CR.2 <- sr.somatic_105CR.2[grep(':1', sr.somatic_105CR.2$ID),]
+sr.somatic_145.2 <- sr.somatic_145.2[grep(':1', sr.somatic_145.2$ID),]}
+
+# Combine data frames.
+raw_data <- rbind(sr.somatic_105CR.1, sr.somatic_105CR.2, sr.somatic_145.2,
+                  sr.germ_105CR.1, sr.germ_105CR.2, sr.germ_145.2,
+                  sniffles.nongerm_105CR, sniffles.nongerm_145.2,
+                  sniffles.germ_105CR, sniffles.germ_145.2,
+                  lr.nongerm_105CR, lr.nongerm_145.2,
+                  lr.germ_105CR, lr.germ_145.2)
+```
+
+### Filter Combined Structural Variant Data
+
+```{r restructure_data}
+# Rename structural variant types.
+{raw_data[grep('[[]$',raw_data$SV_Type),'SV_Type'] <- 'DEL'
+raw_data[grep('^[]]',raw_data$SV_Type),'SV_Type'] <- 'DUP/INS'
+raw_data[grep('^[[]',raw_data$SV_Type),'SV_Type'] <- 'INV'
+raw_data[grep('[]]$',raw_data$SV_Type),'SV_Type'] <- 'INV'
+raw_data[which(raw_data$SV_Type == 'DUP' 
+               | raw_data$SV_Type == 'DUP_TANDEM' 
+               | raw_data$SV_Type == 'DUP_INT' 
+               | raw_data$SV_Type == 'INS'),'SV_Type'] <- 'DUP/INS'}
+
+# Change long-read negative length values to positive.
+raw_data[which(raw_data$Tool == 'lr.nongerm' 
+               | raw_data$Tool == 'lr.germ' 
+               | raw_data$Tool == 'sniffles.nongerm' 
+               | raw_data$Tool == 'sniffles.germ'),'Length'] <- abs(raw_data[which(raw_data$Tool == 'lr.nongerm' 
+                                                                                   | raw_data$Tool == 'lr.germ' 
+                                                                                   | raw_data$Tool == 'sniffles.nongerm' 
+                                                                                   | raw_data$Tool == 'sniffles.germ'),'Length'])
+
+# Create new column with sample number (based on how many samples there are for the PDX model).
+{raw_data$Sample_Num <- '1'
+raw_data[which(raw_data$Sample == '105CR.2'),'Sample_Num'] <- '2'}
+
+# Rename 105CR.1 and 105CR.2 to 105CR.
+raw_data[which(raw_data$Sample == '105CR.1' | raw_data$Sample == '105CR.2'),'Sample'] <- '105CR'
+
+# Calculate an end by adding the length to the start position.
+raw_data$Calc_End <- raw_data$Start + raw_data$Length
+
+# Filter data by length, minimum quality score and if the variant passed filters.
+raw_filtered <- raw_data[which(raw_data$Length >= 1000 | raw_data$Length == -1 | raw_data$Length == 0),]
+raw_filtered <- raw_filtered[which(raw_filtered$Quality >= 20 & raw_filtered$Filter == 'PASS'),]
+```
+
+### Number of Germline and Non-Germline Structural Variants
+
+```{r sv_count}
+# Filter and rename variables for plotting.
+temp <- raw_filtered[which(raw_filtered$SV_Type != 'TRA'),]
+SV_tbl <- temp[which(temp$Tool == 'sr.somatic' | temp$Tool == 'sr.germ' | 
+                      temp$Tool == 'sniffles.nongerm' | temp$Tool == 'sniffles.germ' | 
+                       temp$Merged_Tools == 'sniffles,svim,svdss'),] %>%
+  group_by(Tool,Sample,Merged_Tools,Sample_Num) %>%
+  summarise(count=n()) %>% # Count of structural variants.
+  group_by(Tool,Sample,Merged_Tools) %>%
+  summarise(count_mean=mean(count)) %>% # Average counts for multiple samples of the same PDX model (i.e., 105CR.1 and 105CR.2).
+  mutate(Tool = recode(Tool, 'lr.nongerm'='long-read non-germline','lr.germ'='long-read germline',
+                       'sr.somatic'='short-read somatic','sr.germ'='short-read germline',
+                       'sniffles.nongerm'='long-read non-germline','sniffles.germ'='long-read germline')) %>%
+  mutate(Merged_Tools = recode(Merged_Tools, 'sniffles,svim,svdss'='long-read intersection'))
+
+SV_tbl$Merged_Tools <- factor(SV_tbl$Merged_Tools, levels=c('svaba','sniffles','long-read intersection'))
+
+# Plot the count of germline and non-germline structural variants.
+ggplot(SV_tbl, aes(x=Merged_Tools, y=count_mean, fill=Tool))+
+  geom_bar(position='stack', stat='identity')+
+  facet_wrap(~Sample)+
+  geom_text(data=SV_tbl, aes(label=count_mean), position=position_stack(vjust = 0.5))+
+  scale_fill_manual(values=c('short-read somatic'='darkorange3','short-read germline'='darkorange1',
+                             'long-read non-germline'='dodgerblue1','long-read germline'='lightskyblue'))+
+  labs(x='Variant Calling Tools', y='Count', fill='')+
+  theme_bw()+
+  theme(axis.text.x=element_text(angle=45, hjust=1))
+```
+
+### Density Distribution of Structural Variants by Length
+
+```{r density_length}
+# Filter and rename variables for plotting.
+temp <- raw_filtered[which(raw_filtered$Tool == 'sr.somatic' | raw_filtered$Tool == 'sr.germ' | 
+                      raw_filtered$Tool == 'sniffles.nongerm' | raw_filtered$Tool == 'sniffles.germ' | 
+                       raw_filtered$Merged_Tools == 'sniffles,svim,svdss'),] %>%
+        mutate(Tool = recode(Tool, 'sr.somatic'='short-read somatic','sr.germ'='short-read germline',
+                       'sniffles.nongerm'='long-read non-germline','sniffles.germ'='long-read germline',
+                       'lr.nongerm'='long-read non-germline','lr.germ'='long-read germline'))
+
+temp[which(temp$Merged_Tools == 'sniffles,svim,svdss'),'Merged_Tools'] <- 'intersection'
+
+# Density of intrachromosomal structural variants with lengths greater than 1,000 bp by length.
+ggplot(temp[which(temp$Length != -1 & temp$Length != 0),], aes(x=log10(Length), fill=Tool))+
+  geom_density(alpha=0.4)+
+  facet_grid(Merged_Tools~Sample, scales='free_y')+
+  scale_fill_manual(values=c('short-read somatic'='darkorange3','short-read germline'='darkorange1',
+                             'long-read non-germline'='dodgerblue1','long-read germline'='lightskyblue'))+
+  labs(y='Density', fill='')+
+  theme_bw()
+```
+
+### Density Distribution of Structural Variants by Position
+
+```{r density_position}
+# Create list of chromosomes for filtering data.
+plot_chrs <- paste('chr', c(1:22, 'X', 'Y'), sep = "")
+
+# Filter and rename variables for plotting.
+temp <- raw_filtered[which(raw_filtered$Tool == 'sr.somatic' | raw_filtered$Tool == 'sr.germ' | 
+                      raw_filtered$Tool == 'sniffles.nongerm' | raw_filtered$Tool == 'sniffles.germ' | 
+                       raw_filtered$Merged_Tools == 'sniffles,svim,svdss'),] %>%
+        mutate(Tool = recode(Tool, 'sr.somatic'='short-read somatic','sr.germ'='short-read germline',
+                       'sniffles.nongerm'='long-read non-germline','sniffles.germ'='long-read germline',
+                       'lr.nongerm'='long-read non-germline','lr.germ'='long-read germline'))
+
+temp[which(temp$Merged_Tools == 'sniffles,svim,svdss'),'Merged_Tools'] <- 'intersection'
+
+# Density of inter and intrachromosomal structural variants with lengths greater than 1,000 bp by position.
+for(p in plot_chrs){
+  plot <- ggplot(temp[which(temp$Chromosome == p),], aes(x=Start, fill=Tool))+
+  geom_density(alpha=0.4)+
+  facet_grid(Merged_Tools~Sample, scales='free_y')+
+  scale_fill_manual(values=c('short-read somatic'='darkorange3','short-read germline'='darkorange1',
+                             'long-read non-germline'='dodgerblue1','long-read germline'='lightskyblue'))+
+  labs(title=p, x='Position', y='Density', fill='')+
+  theme_bw()+
+  theme(axis.text.x=element_text(angle=45, hjust=1))
+  
+  print(plot)
+}
+```
+
+### Non-germline Structural Variants by Chromosome
+
+```{r non-germline}
+# Create list of chromosomes for filtering data.
+plot_chrs <- paste('chr', c(1:22, 'X', 'Y'), sep = "")
+
+# Non-germline structural variants by position for each chromosome.
+for(i in plot_chrs){
+  # Filter the data by sample and for only one chromosome.
+  filtered_105CR <- raw_filtered[which(raw_filtered$Chromosome == i 
+                                       & raw_filtered$Sample == '105CR' 
+                                       & raw_filtered$Length >= 10000), c('Tool','Sample','Sample_Num','ID','Chromosome','SV_Type','Length','Start','Calc_End')]
+  filtered_145.2 <- raw_filtered[which(raw_filtered$Chromosome == i 
+                                       & raw_filtered$Sample == '145.2' 
+                                       & raw_filtered$Length >= 10000), c('Tool','Sample','Sample_Num','ID','Chromosome','SV_Type','Length','Start','Calc_End')]
+  
+  if(nrow(filtered_105CR) != 0){
+    
+    # Order data frame by starting position.
+    filtered_105CR <- filtered_105CR[order(filtered_105CR$Start),]
+    
+    # Assign a number to each structural variant for plotting.
+    filtered_105CR$ID_Num <- c(1:nrow(filtered_105CR))
+    
+    # Melt the data so that start and end positions are in the same column.
+    melt_105CR <- melt(filtered_105CR, colnames(filtered_105CR)[colnames(filtered_105CR) != 'Start' & colnames(filtered_105CR) != 'Calc_End'])
+    
+    # Rename variables for plotting.
+    plot_105CR <- melt_105CR[which(melt_105CR$Tool == 'sr.somatic' | melt_105CR$Tool == 'lr.nongerm'),] %>%
+                  mutate(Tool = recode(Tool, 'sr.somatic'='short-read', 'lr.nongerm'='long-read')) %>%
+                  mutate(SV_Type = recode(SV_Type, 'DEL'='deletion', 'DUP/INS'='insertion', 'INV'='inversion', 'TRA'='translocation'))
+    
+    plot <- ggplot(plot_105CR, aes(x=value, y=ID_Num, color=interaction(Tool, SV_Type, sep=':'), shape=Sample_Num))+
+      geom_point(size=3)+
+      geom_line(aes(group=ID_Num))+
+      geom_text(aes(label=Length), data=filter(plot_105CR, variable=='Start', ID_Num>=max(ID_Num)/2), hjust=1.2)+
+      geom_text(aes(label=Length), data=filter(plot_105CR, variable=='Calc_End', ID_Num<max(ID_Num)/2), hjust=-0.2)+
+      scale_color_manual(values=c('short-read:deletion'='darkgoldenrod1',
+                                  'short-read:insertion'='darkgoldenrod3',
+                                  'short-read:inversion'='darkorange4',
+                                  'long-read:deletion'='dodgerblue4',
+                                  'long-read:insertion'='dodgerblue3',
+                                  'long-read:inversion'='dodgerblue2'))+
+      scale_shape_discrete(guide='none')+
+      labs(title = paste(i, '105CR'), x='Position', y='Structural Variant', color='')+
+      theme_bw()+
+      theme(axis.text.x=element_text(angle=45, hjust=1), axis.text.y=element_blank(), axis.ticks.y=element_blank())
+    
+    print(plot)
+  }
+  
+  if(nrow(filtered_145.2) != 0){
+    
+    # Order data frame by starting position.
+    filtered_145.2 <- filtered_145.2[order(filtered_145.2$Start),]
+    
+    # Assign a number to each structural variant for plotting.
+    filtered_145.2$ID_Num <- c(1:nrow(filtered_145.2))
+    
+    # Melt the data so that start and end positions are in the same column.
+    melt_145.2 <- melt(filtered_145.2, colnames(filtered_145.2)[colnames(filtered_145.2) != 'Start' & colnames(filtered_145.2) != 'Calc_End'])
+    
+    # Rename variables for plotting.
+    plot_145.2 <- melt_145.2[which(melt_145.2$Tool == 'sr.somatic' | melt_145.2$Tool == 'lr.nongerm'),] %>%
+                  mutate(Tool = recode(Tool, 'sr.somatic'='short-read', 'lr.nongerm'='long-read')) %>%
+                  mutate(SV_Type = recode(SV_Type, 'DEL'='deletion', 'DUP/INS'='insertion', 'INV'='inversion'))
+    
+    plot <- ggplot(plot_145.2, aes(x=value, y=ID_Num, color=interaction(Tool, SV_Type, sep=':'), shape=Sample_Num))+
+      geom_point(size=3)+
+      geom_line(aes(group=ID_Num))+
+      geom_text(aes(label=Length), data=filter(plot_145.2, variable=='Start', ID_Num>=max(ID_Num)/2), hjust=1.2)+
+      geom_text(aes(label=Length), data=filter(plot_145.2, variable=='Calc_End', ID_Num<max(ID_Num)/2), hjust=-0.2)+
+      scale_color_manual(values=c('short-read:deletion'='darkgoldenrod1',
+                                  'short-read:insertion'='darkgoldenrod3',
+                                  'short-read:inversion'='darkorange4',
+                                  'long-read:deletion'='dodgerblue4',
+                                  'long-read:insertion'='dodgerblue3',
+                                  'long-read:inversion'='dodgerblue2'))+
+      scale_shape_discrete(guide='none')+
+      labs(title=paste(i, '145.2'), x='Position', y='Structural Variant', color='')+
+      theme_bw()+
+      theme(axis.text.x=element_text(angle=45, hjust=1), axis.text.y=element_blank(), axis.ticks.y=element_blank())
+    
+    print(plot)
+  }
+}
+```
+
+### Structural Variants in the AFF2 Gene on Chromosome X
+
+### *Graphical view of structural variants with gGNOME*
+
+1. Define global variables.
+
+```{r gg_variables}
+# SVIM and SVDSS VCF filenames.
+{svim_105CR_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svim/105CR_ONT_hg38_Mouse/variants.filtered10.vcf"
+svim_145.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svim/145.2_ONT_hg38_Mouse/variants.filtered10.vcf"}
+
+{svdss_105CR_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svdss/105CR_ONT_hg38_Mouse/svs_poa.vcf"
+svdss_145.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svdss/145.2_ONT_hg38_Mouse/svs_poa.vcf"}
+
+# Create a list of the samples to be analyzed.
+samples <- c('sr.somatic_145.2','sniffles.nongerm_145.2','svim_145.2','svdss_145.2')
+
+# Define the plotting window for gGnome graphs.
+window <- 'X:1.485e8-1.49e8' # Location of the AFF2 gene in chromosome X.
+
+# Save the minimum quality score used for plotting genome graphs.
+min_qual <- 20
+```
+
+2. Load in VCF files using gGnome.
+
+```{r load_junctions}
+# Generate junctions from VCF files using the gGnome command jJ. 
+for(i in samples){
+  assign(paste(i, 'j', sep = '_'), jJ(get(paste(i, 'fn', sep = '_'))))
+}
+```
+
+3. Filter junctions.
+
+```{r filter_junctions}
+# Filter junctions by quality score.
+for(i in samples){
+  assign(paste(i, 'fj', sep = '_'), get(paste(i, 'j', sep = '_'))[QUAL>min_qual,])
+}
+```
+
+4. Plot junctions.
+
+```{r plot_junctions}
+# Generate genome graph from junctions using the gGnome command gG.
+for(i in samples){
+  assign(paste(i, 'gg', sep = '_'), gG(juncs = get(paste(i, 'fj', sep = '_'))))
+}
+
+# Plot genome graphs.
+for(i in samples){
+  cat(i)
+  plot(get(paste(i, 'gg', sep = '_'))$gt, window, links = get(paste(i, 'fj', sep = '_'))$grl)
+}
+```
