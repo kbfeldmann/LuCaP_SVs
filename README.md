@@ -1,11 +1,15 @@
 ### 🌎 Cancer Genomics &nbsp; &nbsp; &nbsp; 🔍 Structural Variants &nbsp; &nbsp; &nbsp; 📈 Long-Read Sequencing
 
-Insert introduction
+**-----Insert introduction-----**
 
 ![PDX Models](https://github.com/kbfeldmann/LuCaP_SVs/assets/47021794/7f0ee77e-973c-4be0-a45d-61dc4ab03a94)
 **Figure 1:** *Diagram of using a PDX model for short-read and long-read genomic samples. Prostate cancer tumor tissue was collected from a patient, and tumor tissue material was increased in mouse models before sequencing. Note: short-read and long-read samples were collected from different mice.*
 
+**-----Continue introduction-----**
+
 **Research Question:** *How do genomic rearrangements compare between short-read and long-read sequencing data in prostate cancer genomes?*
+
+**-----Insert findings-----**
 
 To learn more, check out my presentation for early-career molecular biologists: [click here](Winter_Rotation_Presentation.pdf)
 
