@@ -1,0 +1,2 @@
+/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svaba/Model1.1_ILL_hg38_noMouse/Model1.1_ILL_hg38_noMouse.svaba.somatic.sv.vcf
+/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/gridss/Model1.1_ILL_hg38_noMouse/Model1.1_ILL_hg38_noMouse.vcf
