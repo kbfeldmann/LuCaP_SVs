@@ -1,0 +1,3 @@
+/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/sniffles/Model2_ONT_hg38_Mouse/Model2_ONT_hg38_Mouse_non_germline.vcf
+/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svim/Model2_ONT_hg38_Mouse/variants.filtered10.vcf
+/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svdss/Model2_ONT_hg38_Mouse/svs_poa.vcf
