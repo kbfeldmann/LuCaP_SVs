@@ -1,2 +1,0 @@
-/fh/fast/ha_g/user/kfeldman/2023/LuCaP_SVs/Bams/105CR.1_ILL_hg38_noMouse.bam 
-/fh/fast/ha_g/user/kfeldman/2023/LuCaP_SVs/Bams/105CR.1_ILL_hg38_noMouse.bam 
