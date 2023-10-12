@@ -1,0 +1,3 @@
+/fh/fast/ha_g/user/kfeldman/2023/LuCaP_SVs/Bams/Model1_ONT_hg38_Mouse.bam
+/fh/fast/ha_g/user/kfeldman/2023/LuCaP_SVs/Bams/Model1_ONT_hg38_Mouse.bam
+/fh/fast/ha_g/user/kfeldman/2023/LuCaP_SVs/Bams/Model1_ONT_hg38_Mouse.bam
