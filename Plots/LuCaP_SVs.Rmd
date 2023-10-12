@@ -26,7 +26,7 @@ Are long-reads able to identify more structural variants than short-reads?\
 Are long-reads able to identify unknown genomic rearrangements important for understanding prostate cancer?\
 
 <font color="red">Project:</font>\
-To identify structural variants in both short-read (Illumina) and long-read (Oxford Nanopore) whole-genome sequences from two PDX models (105CR and 145.2), long-read structural variants from multiple long-read structural variant callers (Sniffles, SVIM and SVDSS) were compared to structural variants identified by SvABA (short-read structural variant caller). Variant callers generate a standardized output file (i.e., VCF) that contains information on how the sample sequence varies from the reference genome sequence. Below are the different VCF files generated for each tool run, and bold VCF files were used for analyses.\
+To identify structural variants in both short-read (Illumina) and long-read (Oxford Nanopore) whole-genome sequences from two PDX models, long-read structural variants from multiple long-read structural variant callers (Sniffles, SVIM and SVDSS) were compared to structural variants identified by SvABA (short-read structural variant caller). Variant callers generate a standardized output file (i.e., VCF) that contains information on how the sample sequence varies from the reference genome sequence. Below are the different VCF files generated for each tool run, and bold VCF files were used for analyses.\
 
 ### Structural Variant Detection Tools
 
@@ -66,31 +66,31 @@ To identify structural variants in both short-read (Illumina) and long-read (Oxf
 
 ```{r sr_filenames}
 ### Short-read ###
-{sr.somatic_105CR.1_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svaba/105CR.1_ILL_hg38_noMouse/105CR.1_ILL_hg38_noMouse.svaba.somatic.sv.vcf"
-sr.somatic_105CR.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svaba/105CR.2_ILL_hg38_noMouse/105CR.2_ILL_hg38_noMouse.svaba.somatic.sv.vcf"
-sr.somatic_145.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svaba/145.2_ILL_hg38_noMouse/145.2_ILL_hg38_noMouse.svaba.somatic.sv.vcf"}
+{sr.somatic_Model1.1_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svaba/Model1.1_ILL_hg38_noMouse/Model1.1_ILL_hg38_noMouse.svaba.somatic.sv.vcf"
+sr.somatic_Model1.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svaba/Model1.2_ILL_hg38_noMouse/Model1.2_ILL_hg38_noMouse.svaba.somatic.sv.vcf"
+sr.somatic_Model2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svaba/Model2_ILL_hg38_noMouse/Model2_ILL_hg38_noMouse.svaba.somatic.sv.vcf"}
 
-{sr.germ_105CR.1_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svaba/105CR.1_ILL_hg38_noMouse/105CR.1_ILL_hg38_noMouse.svaba.germline.sv.vcf"
-sr.germ_105CR.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svaba/105CR.2_ILL_hg38_noMouse/105CR.2_ILL_hg38_noMouse.svaba.germline.sv.vcf"
-sr.germ_145.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svaba/145.2_ILL_hg38_noMouse/145.2_ILL_hg38_noMouse.svaba.germline.sv.vcf"}
+{sr.germ_Model1.1_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svaba/Model1.1_ILL_hg38_noMouse/Model1.1_ILL_hg38_noMouse.svaba.germline.sv.vcf"
+sr.germ_Model1.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svaba/Model1.2_ILL_hg38_noMouse/Model1.2_ILL_hg38_noMouse.svaba.germline.sv.vcf"
+sr.germ_Model2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svaba/Model2_ILL_hg38_noMouse/Model2_ILL_hg38_noMouse.svaba.germline.sv.vcf"}
 ```
 
 ### *Long-read*
 
 ```{r lr_filenames}
 ### Sniffles ###
-{sniffles.nongerm_105CR_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/sniffles/105CR_ONT_hg38_Mouse/105CR_ONT_hg38_Mouse_non_germline.vcf"
-sniffles.nongerm_145.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/sniffles/145.2_ONT_hg38_Mouse/145.2_ONT_hg38_Mouse_non_germline.vcf"}
+{sniffles.nongerm_Model1_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/sniffles/Model1_ONT_hg38_Mouse/Model1_ONT_hg38_Mouse_non_germline.vcf"
+sniffles.nongerm_Model2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/sniffles/Model2_ONT_hg38_Mouse/Model2_ONT_hg38_Mouse_non_germline.vcf"}
 
-{sniffles.germ_105CR_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/sniffles/105CR_ONT_hg38_Mouse/105CR_ONT_hg38_Mouse_germline.vcf"
-sniffles.germ_145.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/sniffles/145.2_ONT_hg38_Mouse/145.2_ONT_hg38_Mouse_germline.vcf"}
+{sniffles.germ_Model1_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/sniffles/Model1_ONT_hg38_Mouse/Model1_ONT_hg38_Mouse_germline.vcf"
+sniffles.germ_Model2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/sniffles/Model2_ONT_hg38_Mouse/Model2_ONT_hg38_Mouse_germline.vcf"}
 
 ### Long-read Merged ###
-{lr.nongerm_105CR_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/jasmine/105CR_ONT_hg38_Mouse_non_germline/105CR_ONT_hg38_Mouse_merged.vcf"
-lr.nongerm_145.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/jasmine/145.2_ONT_hg38_Mouse_non_germline/145.2_ONT_hg38_Mouse_merged.vcf"}
+{lr.nongerm_Model1_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/jasmine/Model1_ONT_hg38_Mouse_non_germline/Model1_ONT_hg38_Mouse_merged.vcf"
+lr.nongerm_Model2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/jasmine/Model2_ONT_hg38_Mouse_non_germline/Model2_ONT_hg38_Mouse_merged.vcf"}
 
-{lr.germ_105CR_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/jasmine/105CR_ONT_hg38_Mouse_germline/105CR_ONT_hg38_Mouse_merged.vcf"
-lr.germ_145.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/jasmine/145.2_ONT_hg38_Mouse_germline/145.2_ONT_hg38_Mouse_merged.vcf"}
+{lr.germ_Model1_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/jasmine/Model1_ONT_hg38_Mouse_germline/Model1_ONT_hg38_Mouse_merged.vcf"
+lr.germ_Model2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/jasmine/Model2_ONT_hg38_Mouse_germline/Model2_ONT_hg38_Mouse_merged.vcf"}
 ```
 
 ### Read VCF Files Using readVcf
@@ -99,12 +99,12 @@ Read in the VCF files using the R package VariantAnnotation. VCF files follow a 
 
 ```{r read_vcf}
 # List of file names.
-samples <- c('sr.somatic_105CR.1','sr.somatic_105CR.2','sr.somatic_145.2',
-             'sr.germ_105CR.1','sr.germ_105CR.2','sr.germ_145.2',
-             'sniffles.nongerm_105CR','sniffles.nongerm_145.2',
-             'sniffles.germ_105CR','sniffles.germ_145.2',
-             'lr.nongerm_105CR','lr.nongerm_145.2',
-             'lr.germ_105CR','lr.germ_145.2')
+samples <- c('sr.somatic_Model1.1','sr.somatic_Model1.2','sr.somatic_Model2',
+             'sr.germ_Model1.1','sr.germ_Model1.2','sr.germ_Model2',
+             'sniffles.nongerm_Model1','sniffles.nongerm_Model2',
+             'sniffles.germ_Model1','sniffles.germ_Model2',
+             'lr.nongerm_Model1','lr.nongerm_Model2',
+             'lr.germ_Model1','lr.germ_Model2')
 
 # Read VCF files.
 for(i in samples){
@@ -157,21 +157,21 @@ for(i in samples){
 }
 
 # Only include the first breakpoint to remove duplicates.
-{sr.germ_105CR.1 <- sr.germ_105CR.1[grep(':1', sr.germ_105CR.1$ID),]
-sr.germ_105CR.2 <- sr.germ_105CR.2[grep(':1', sr.germ_105CR.2$ID),]
-sr.germ_145.2 <- sr.germ_145.2[grep(':1', sr.germ_145.2$ID),]}
+{sr.germ_Model1.1 <- sr.germ_Model1.1[grep(':1', sr.germ_Model1.1$ID),]
+sr.germ_Model1.2 <- sr.germ_Model1.2[grep(':1', sr.germ_Model1.2$ID),]
+sr.germ_Model2 <- sr.germ_Model2[grep(':1', sr.germ_Model2$ID),]}
 
-{sr.somatic_105CR.1 <- sr.somatic_105CR.1[grep(':1', sr.somatic_105CR.1$ID),]
-sr.somatic_105CR.2 <- sr.somatic_105CR.2[grep(':1', sr.somatic_105CR.2$ID),]
-sr.somatic_145.2 <- sr.somatic_145.2[grep(':1', sr.somatic_145.2$ID),]}
+{sr.somatic_Model1.1 <- sr.somatic_Model1.1[grep(':1', sr.somatic_Model1.1$ID),]
+sr.somatic_Model1.2 <- sr.somatic_Model1.2[grep(':1', sr.somatic_Model1.2$ID),]
+sr.somatic_Model2 <- sr.somatic_Model2[grep(':1', sr.somatic_Model2$ID),]}
 
 # Combine data frames.
-raw_data <- rbind(sr.somatic_105CR.1, sr.somatic_105CR.2, sr.somatic_145.2,
-                  sr.germ_105CR.1, sr.germ_105CR.2, sr.germ_145.2,
-                  sniffles.nongerm_105CR, sniffles.nongerm_145.2,
-                  sniffles.germ_105CR, sniffles.germ_145.2,
-                  lr.nongerm_105CR, lr.nongerm_145.2,
-                  lr.germ_105CR, lr.germ_145.2)
+raw_data <- rbind(sr.somatic_Model1.1, sr.somatic_Model1.2, sr.somatic_Model2,
+                  sr.germ_Model1.1, sr.germ_Model1.2, sr.germ_Model2,
+                  sniffles.nongerm_Model1, sniffles.nongerm_Model2,
+                  sniffles.germ_Model1, sniffles.germ_Model2,
+                  lr.nongerm_Model1, lr.nongerm_Model2,
+                  lr.germ_Model1, lr.germ_Model2)
 ```
 
 ### Filter Combined Structural Variant Data
@@ -198,10 +198,10 @@ raw_data[which(raw_data$Tool == 'lr.nongerm'
 
 # Create new column with sample number (based on how many samples there are for the PDX model).
 {raw_data$Sample_Num <- '1'
-raw_data[which(raw_data$Sample == '105CR.2'),'Sample_Num'] <- '2'}
+raw_data[which(raw_data$Sample == 'Model1.2'),'Sample_Num'] <- '2'}
 
-# Rename 105CR.1 and 105CR.2 to 105CR.
-raw_data[which(raw_data$Sample == '105CR.1' | raw_data$Sample == '105CR.2'),'Sample'] <- '105CR'
+# Rename Model1.1 and Model1.2 to Model1.
+raw_data[which(raw_data$Sample == 'Model1.1' | raw_data$Sample == 'Model1.2'),'Sample'] <- 'Model1'
 
 # Calculate an end by adding the length to the start position.
 raw_data$Calc_End <- raw_data$Start + raw_data$Length
@@ -222,7 +222,7 @@ SV_tbl <- temp[which(temp$Tool == 'sr.somatic' | temp$Tool == 'sr.germ' |
   group_by(Tool,Sample,Merged_Tools,Sample_Num) %>%
   summarise(count=n()) %>% # Count of structural variants.
   group_by(Tool,Sample,Merged_Tools) %>%
-  summarise(count_mean=mean(count)) %>% # Average counts for multiple samples of the same PDX model (i.e., 105CR.1 and 105CR.2).
+  summarise(count_mean=mean(count)) %>% # Average counts for multiple samples of the same PDX model (i.e., Model1.1 and Model1.2).
   mutate(Tool = recode(Tool, 'lr.nongerm'='long-read non-germline','lr.germ'='long-read germline',
                        'sr.somatic'='short-read somatic','sr.germ'='short-read germline',
                        'sniffles.nongerm'='long-read non-germline','sniffles.germ'='long-read germline')) %>%
@@ -305,34 +305,34 @@ plot_chrs <- paste('chr', c(1:22, 'X', 'Y'), sep = "")
 # Non-germline structural variants by position for each chromosome.
 for(i in plot_chrs){
   # Filter the data by sample and for only one chromosome.
-  filtered_105CR <- raw_filtered[which(raw_filtered$Chromosome == i 
-                                       & raw_filtered$Sample == '105CR' 
+  filtered_Model1 <- raw_filtered[which(raw_filtered$Chromosome == i 
+                                       & raw_filtered$Sample == 'Model1' 
                                        & raw_filtered$Length >= 10000), c('Tool','Sample','Sample_Num','ID','Chromosome','SV_Type','Length','Start','Calc_End')]
-  filtered_145.2 <- raw_filtered[which(raw_filtered$Chromosome == i 
-                                       & raw_filtered$Sample == '145.2' 
+  filtered_Model2 <- raw_filtered[which(raw_filtered$Chromosome == i 
+                                       & raw_filtered$Sample == 'Model2' 
                                        & raw_filtered$Length >= 10000), c('Tool','Sample','Sample_Num','ID','Chromosome','SV_Type','Length','Start','Calc_End')]
   
-  if(nrow(filtered_105CR) != 0){
+  if(nrow(filtered_Model1) != 0){
     
     # Order data frame by starting position.
-    filtered_105CR <- filtered_105CR[order(filtered_105CR$Start),]
+    filtered_Model1 <- filtered_Model1[order(filtered_Model1$Start),]
     
     # Assign a number to each structural variant for plotting.
-    filtered_105CR$ID_Num <- c(1:nrow(filtered_105CR))
+    filtered_Model1$ID_Num <- c(1:nrow(filtered_Model1))
     
     # Melt the data so that start and end positions are in the same column.
-    melt_105CR <- melt(filtered_105CR, colnames(filtered_105CR)[colnames(filtered_105CR) != 'Start' & colnames(filtered_105CR) != 'Calc_End'])
+    melt_Model1 <- melt(filtered_Model1, colnames(filtered_Model1)[colnames(filtered_Model1) != 'Start' & colnames(filtered_Model1) != 'Calc_End'])
     
     # Rename variables for plotting.
-    plot_105CR <- melt_105CR[which(melt_105CR$Tool == 'sr.somatic' | melt_105CR$Tool == 'lr.nongerm'),] %>%
+    plot_Model1 <- melt_Model1[which(melt_Model1$Tool == 'sr.somatic' | melt_Model1$Tool == 'lr.nongerm'),] %>%
                   mutate(Tool = recode(Tool, 'sr.somatic'='short-read', 'lr.nongerm'='long-read')) %>%
                   mutate(SV_Type = recode(SV_Type, 'DEL'='deletion', 'DUP/INS'='insertion', 'INV'='inversion', 'TRA'='translocation'))
     
-    plot <- ggplot(plot_105CR, aes(x=value, y=ID_Num, color=interaction(Tool, SV_Type, sep=':'), shape=Sample_Num))+
+    plot <- ggplot(plot_Model1, aes(x=value, y=ID_Num, color=interaction(Tool, SV_Type, sep=':'), shape=Sample_Num))+
       geom_point(size=3)+
       geom_line(aes(group=ID_Num))+
-      geom_text(aes(label=Length), data=filter(plot_105CR, variable=='Start', ID_Num>=max(ID_Num)/2), hjust=1.2)+
-      geom_text(aes(label=Length), data=filter(plot_105CR, variable=='Calc_End', ID_Num<max(ID_Num)/2), hjust=-0.2)+
+      geom_text(aes(label=Length), data=filter(plot_Model1, variable=='Start', ID_Num>=max(ID_Num)/2), hjust=1.2)+
+      geom_text(aes(label=Length), data=filter(plot_Model1, variable=='Calc_End', ID_Num<max(ID_Num)/2), hjust=-0.2)+
       scale_color_manual(values=c('short-read:deletion'='darkgoldenrod1',
                                   'short-read:insertion'='darkgoldenrod3',
                                   'short-read:inversion'='darkorange4',
@@ -340,34 +340,34 @@ for(i in plot_chrs){
                                   'long-read:insertion'='dodgerblue3',
                                   'long-read:inversion'='dodgerblue2'))+
       scale_shape_discrete(guide='none')+
-      labs(title = paste(i, '105CR'), x='Position', y='Structural Variant', color='')+
+      labs(title = paste(i, 'Model1'), x='Position', y='Structural Variant', color='')+
       theme_bw()+
       theme(axis.text.x=element_text(angle=45, hjust=1), axis.text.y=element_blank(), axis.ticks.y=element_blank())
     
     print(plot)
   }
   
-  if(nrow(filtered_145.2) != 0){
+  if(nrow(filtered_Model2) != 0){
     
     # Order data frame by starting position.
-    filtered_145.2 <- filtered_145.2[order(filtered_145.2$Start),]
+    filtered_Model2 <- filtered_Model2[order(filtered_Model2$Start),]
     
     # Assign a number to each structural variant for plotting.
-    filtered_145.2$ID_Num <- c(1:nrow(filtered_145.2))
+    filtered_Model2$ID_Num <- c(1:nrow(filtered_Model2))
     
     # Melt the data so that start and end positions are in the same column.
-    melt_145.2 <- melt(filtered_145.2, colnames(filtered_145.2)[colnames(filtered_145.2) != 'Start' & colnames(filtered_145.2) != 'Calc_End'])
+    melt_Model2 <- melt(filtered_Model2, colnames(filtered_Model2)[colnames(filtered_Model2) != 'Start' & colnames(filtered_Model2) != 'Calc_End'])
     
     # Rename variables for plotting.
-    plot_145.2 <- melt_145.2[which(melt_145.2$Tool == 'sr.somatic' | melt_145.2$Tool == 'lr.nongerm'),] %>%
+    plot_Model2 <- melt_Model2[which(melt_Model2$Tool == 'sr.somatic' | melt_Model2$Tool == 'lr.nongerm'),] %>%
                   mutate(Tool = recode(Tool, 'sr.somatic'='short-read', 'lr.nongerm'='long-read')) %>%
                   mutate(SV_Type = recode(SV_Type, 'DEL'='deletion', 'DUP/INS'='insertion', 'INV'='inversion'))
     
-    plot <- ggplot(plot_145.2, aes(x=value, y=ID_Num, color=interaction(Tool, SV_Type, sep=':'), shape=Sample_Num))+
+    plot <- ggplot(plot_Model2, aes(x=value, y=ID_Num, color=interaction(Tool, SV_Type, sep=':'), shape=Sample_Num))+
       geom_point(size=3)+
       geom_line(aes(group=ID_Num))+
-      geom_text(aes(label=Length), data=filter(plot_145.2, variable=='Start', ID_Num>=max(ID_Num)/2), hjust=1.2)+
-      geom_text(aes(label=Length), data=filter(plot_145.2, variable=='Calc_End', ID_Num<max(ID_Num)/2), hjust=-0.2)+
+      geom_text(aes(label=Length), data=filter(plot_Model2, variable=='Start', ID_Num>=max(ID_Num)/2), hjust=1.2)+
+      geom_text(aes(label=Length), data=filter(plot_Model2, variable=='Calc_End', ID_Num<max(ID_Num)/2), hjust=-0.2)+
       scale_color_manual(values=c('short-read:deletion'='darkgoldenrod1',
                                   'short-read:insertion'='darkgoldenrod3',
                                   'short-read:inversion'='darkorange4',
@@ -375,7 +375,7 @@ for(i in plot_chrs){
                                   'long-read:insertion'='dodgerblue3',
                                   'long-read:inversion'='dodgerblue2'))+
       scale_shape_discrete(guide='none')+
-      labs(title=paste(i, '145.2'), x='Position', y='Structural Variant', color='')+
+      labs(title=paste(i, 'Model2'), x='Position', y='Structural Variant', color='')+
       theme_bw()+
       theme(axis.text.x=element_text(angle=45, hjust=1), axis.text.y=element_blank(), axis.ticks.y=element_blank())
     
@@ -392,14 +392,14 @@ for(i in plot_chrs){
 
 ```{r gg_variables}
 # SVIM and SVDSS VCF filenames.
-{svim_105CR_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svim/105CR_ONT_hg38_Mouse/variants.filtered10.vcf"
-svim_145.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svim/145.2_ONT_hg38_Mouse/variants.filtered10.vcf"}
+{svim_Model1_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svim/Model1_ONT_hg38_Mouse/variants.filtered10.vcf"
+svim_Model2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svim/Model2_ONT_hg38_Mouse/variants.filtered10.vcf"}
 
-{svdss_105CR_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svdss/105CR_ONT_hg38_Mouse/svs_poa.vcf"
-svdss_145.2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svdss/145.2_ONT_hg38_Mouse/svs_poa.vcf"}
+{svdss_Model1_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svdss/Model1_ONT_hg38_Mouse/svs_poa.vcf"
+svdss_Model2_fn <- "/fh/scratch/delete90/ha_g/users/kfeldman/LuCaP_SVs/svdss/Model2_ONT_hg38_Mouse/svs_poa.vcf"}
 
 # Create a list of the samples to be analyzed.
-samples <- c('sr.somatic_145.2','sniffles.nongerm_145.2','svim_145.2','svdss_145.2')
+samples <- c('sr.somatic_Model2','sniffles.nongerm_Model2','svim_Model2','svdss_Model2')
 
 # Define the plotting window for gGnome graphs.
 window <- 'X:1.485e8-1.49e8' # Location of the AFF2 gene in chromosome X.
