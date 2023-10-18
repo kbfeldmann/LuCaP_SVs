@@ -9,7 +9,7 @@ The majority of cancer genomes available for identifying structural variants - g
 
 **Research Question:** *How do genomic rearrangements compare between short-read and long-read sequencing data in prostate cancer genomes?*
 
-**-----Insert findings-----**
+Despite comparing structural variants identified by three different long-read variant callers (i.e., intersection) to the structural variants identified by one short-read variant caller, long-reads identified more germline and non-germline structural variants than short-reads. These additional structural variants are either unknown genomic rearrangements, variants that occurred between passages or germline variants. Despite attempting to remove germline variants using Sniffles, some of these additional structural variants may be germline because our long-read prostate cancer PDX models were not paired with a normal sample.
 
 To learn more, check out my presentation for early-career molecular biologists: [click here](Winter_Rotation_Presentation.pdf)
 
